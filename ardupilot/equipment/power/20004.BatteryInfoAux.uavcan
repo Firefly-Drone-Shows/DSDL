@@ -7,30 +7,27 @@
 # include the timestamp. The following fields should contain the timestamp of the last current measurement.
 uavcan.Timestamp timestamp
 
-# Battery individual cell voltages
-# length of following field also used as cell count
-float16[<=255] voltage_cell          # [Volt]
-
-# Number of Charge/Discharge Cycles
-# A charge cycle is defined as a complete discharge and charge.
-# IE when the system uses all of the battery's available energy capacity.
-# Please note that this value doesn't mean that the cycle count should be incremented at every charge.
-# For example, if half of a battery's charge is used in one run,
-# and then recharged fully that is half of a cycle. If the same thing occurs again
-# then the charge cycle count would be incremented once, not twice.
-uint16 cycle_count
-
-# Number of times the battery was discharged over the rated capacity
-uint16 over_discharge_count
-
-# Max instantaneous current draw since last message
-float16 max_current                 # [Ampere]
-
-# Nominal voltage of the battery pack
-# the nominal Voltage can be used for conversion between Wh and Ah
-# if the value of this field is 0, the conversion should be omitted.
-float16 nominal_voltage             # [Volt]
-
-bool is_powering_off                # Power off event imminent indication, false if unknown
-
 uint8 battery_id                    # Identifies the battery within this vehicle, e.g. 0 - primary battery
+uint8 percent_goal
+
+
+float16 hours_to_full_charge    # [Hours]       Charging is expected to complete in this time; zero if not charging
+float16 hours_to_goal_pct       # [Hours]
+#
+# Status flags.
+# Notes:
+#  - CHARGING must be always set as long as the battery is connected to a charger, even if the charging is complete.
+#  - CHARGED must be cleared immediately when the charger is disconnected.
+#
+uint11 STATUS_FLAG_IN_USE       = 1     # The battery is currently used as a power supply
+uint11 STATUS_FLAG_CHARGING     = 2     # Charger is active
+uint11 STATUS_FLAG_CHARGED      = 4     # Charging complete, but the charger is still active
+uint11 STATUS_FLAG_TEMP_HOT     = 8     # Battery temperature is above normal
+uint11 STATUS_FLAG_TEMP_COLD    = 16    # Battery temperature is below normal
+uint11 STATUS_FLAG_OVERLOAD     = 32    # Safe operating area violation
+uint11 STATUS_FLAG_BAD_BATTERY  = 64    # This battery should not be used anymore (e.g. low SOH)
+uint11 STATUS_FLAG_NEED_SERVICE = 128   # This battery requires maintenance (e.g. balancing, full recharge)
+uint11 STATUS_FLAG_BMS_ERROR    = 256   # Battery management system/controller error, smart battery interface error
+uint11 STATUS_FLAG_FINISHED     = 512   # Goal percetange has been reached
+uint11 STATUS_FLAG_STANDBY      = 1024  # Keep zero
+uint11 status_flags

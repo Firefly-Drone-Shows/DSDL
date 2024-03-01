@@ -9,6 +9,7 @@ float16 charger_in_a
 float16 charger_in_w
 float16 die_temp_c
 float16 on_board_therm_temp
+uint8 charge_status
 
 uint8 ERROR_FLAG_OVERVOLTAGE  = 1
 uint8 ERROR_FLAG_UNDERVOLTAGE = 2
